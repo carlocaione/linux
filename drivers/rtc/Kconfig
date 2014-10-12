@@ -1381,6 +1381,13 @@ config RTC_DRV_XGENE
 	  This driver can also be built as a module, if so, the module
 	  will be called "rtc-xgene".
 
+config RTC_DRV_MESON
+	tristate "Amlogic MesonX RTC"
+	depends on ARCH_MESON
+	help
+	  If you say Y here you will get support for the RTC found on
+	  Amlogic MesonX.
+
 comment "HID Sensor RTC drivers"
 
 config RTC_DRV_HID_SENSOR_TIME
