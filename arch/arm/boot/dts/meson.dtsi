@@ -75,6 +75,12 @@
 			reg = <0xc1109900 0x8>;
 		};
 
+		reset_AO: reset@c8100040 {
+			#reset-cells = <1>;
+			compatible = "amlogic,meson6-rst-mgr-ao";
+			reg = <0xc8100040 0x4>;
+		};
+
 		uart_AO: serial@c81004c0 {
 			compatible = "amlogic,meson-uart";
 			reg = <0xc81004c0 0x14>;
