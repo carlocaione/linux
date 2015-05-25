@@ -3,6 +3,12 @@
 Required properties for the root node:
  - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
  - reg: address and size of registers controlling irq functionality
+ - reg-names: should be "irq"
+ - interrupt-controller: marks the device node as an interrupt controller
+ - #interrupt-cells: should be 2. The first cell is the GPIO number. The
+		     second cell is used to specify trigger type.
+ - amlogic,irqs-gpio: specifies the GPIO IRQ numbers on the GIC (GPIO_IRQ#)
+ - interrupt-parent: specifies the parent interrupt controller.
 
 === GPIO sub-nodes ===
 
@@ -46,7 +52,12 @@ pinctrl-bindings.txt
 
 	pinctrl: pinctrl@c1109880 {
 		compatible = "amlogic,meson8-pinctrl";
+		reg-names = "irq";
 		reg = <0xc1109880 0x10>;
+		interrupt-parent = <&gic>;
+		amlogic,irqs-gpio = <64 65 66 67 68 69 70 71>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
 		#address-cells = <1>;
 		#size-cells = <1>;
 		ranges;
