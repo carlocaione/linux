@@ -1,0 +1,38 @@
+* Amlogic MesonX MMC controller
+
+The highspeed MMC host controller on Amlogic SoCs provides an interface
+for MMC, SD, SDIO and SDHC types of memory cards.
+
+Supported maximum speeds are the ones of the eMMC standard 4.41 as well
+as the speed of SD standard 2.0.
+
+Required properties:
+ - compatible : "amlogic,meson-mmc"
+ - reg : mmc controller base registers
+ - interrupts : mmc controller interrupt
+ - clocks : phandle to SDIO clock provider
+
+Optional properties:
+ - meson,sdio-port : 0 for SDIO port A, 1 for SDIO port B. (default: 0)
+ - for cd, bus-width and additional generic mmc parameters
+   please refer to mmc.txt within this directory
+
+Examples:
+	- Within .dtsi:
+	mmc0: mmc@c1108c20 {
+		compatible = "amlogic,meson-mmc";
+		reg = <0xc1108c20 0x20>;
+		interrupts = <0 28 1>;
+		clocks = <&clkc CLKID_CLK81>;
+		status = "disabled";
+	};
+
+	- Within .dts:
+	&mmc0 {
+		status = "okay";
+		pinctrl-0 = <&mmc0_sd_b_pins>;
+		pinctrl-names = "default";
+		meson,sdio-port = <1>;
+		cd-gpios = <&gpio CARD_6 0>;
+		cd-inverted;
+	};
