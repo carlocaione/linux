@@ -181,6 +181,22 @@
 					function = "uart_ao";
 				};
 			};
+
+			mmc0_sd_b_pins: mmc0_sd_b {
+				mux {
+					groups = "sd_d1_b", "sd_d0_b", "sd_clk_b", "sd_cmd_b",
+						 "sd_d3_b", "sd_d2_b";
+					function = "sd_b";
+				};
+			};
+		};
+
+		mmc0: mmc@c1108c20 {
+			compatible = "amlogic,meson-mmc";
+			reg = <0xc1108c20 0x20>;
+			interrupts = <0 28 1>;
+			clocks = <&clkc CLKID_CLK81>;
+			status = "disabled";
 		};
 	};
 }; /* end of / */
