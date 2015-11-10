@@ -6,6 +6,7 @@ menuconfig ARCH_MESON
 	select CACHE_L2X0
 	select PINCTRL
 	select PINCTRL_MESON
+	select HAVE_ARM_SCU if SMP
 
 if ARCH_MESON
 
