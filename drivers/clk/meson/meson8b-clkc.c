@@ -179,7 +179,7 @@ static void __init meson8b_clkc_init(struct device_node *np)
 		return;
 	}
 
-	meson_clk_register_clks(&meson8b_xtal_conf, 1, clk_base);
+	meson_clk_register_clks(np, &meson8b_xtal_conf, 1, clk_base);
 	iounmap(clk_base);
 
 	/*  Generic clocks and PLLs */
@@ -189,7 +189,7 @@ static void __init meson8b_clkc_init(struct device_node *np)
 		return;
 	}
 
-	meson_clk_register_clks(meson8b_clk_confs,
+	meson_clk_register_clks(np, meson8b_clk_confs,
 				ARRAY_SIZE(meson8b_clk_confs),
 				clk_base);
 }

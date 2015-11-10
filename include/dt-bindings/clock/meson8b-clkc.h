@@ -5,6 +5,11 @@
 #ifndef __MESON8B_CLKC_H
 #define __MESON8B_CLKC_H
 
+#define RST_CORE0		0
+#define RST_CORE1		1
+#define RST_CORE2		2
+#define RST_CORE3		3
+
 #define CLKID_UNUSED		0
 #define CLKID_XTAL		1
 #define CLKID_PLL_FIXED		2

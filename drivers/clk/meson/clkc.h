@@ -177,9 +177,11 @@ struct clk_conf {
 	}								\
 
 struct clk **meson_clk_init(struct device_node *np, unsigned long nr_clks);
-void meson_clk_register_clks(const struct clk_conf *clk_confs,
+void meson_clk_register_clks(struct device_node *np,
+			     const struct clk_conf *clk_confs,
 			     unsigned int nr_confs, void __iomem *clk_base);
-struct clk *meson_clk_register_cpu(const struct clk_conf *clk_conf,
+struct clk *meson_clk_register_cpu(struct device_node *np,
+				   const struct clk_conf *clk_conf,
 				   void __iomem *reg_base, spinlock_t *lock);
 struct clk *meson_clk_register_pll(const struct clk_conf *clk_conf,
 				   void __iomem *reg_base, spinlock_t *lock);

@@ -197,7 +197,8 @@ meson_clk_register_fixed_rate(const struct clk_conf *clk_conf,
 	return clk;
 }
 
-void __init meson_clk_register_clks(const struct clk_conf *clk_confs,
+void __init meson_clk_register_clks(struct device_node *np,
+				    const struct clk_conf *clk_confs,
 				    size_t nr_confs,
 				    void __iomem *clk_base)
 {
@@ -221,7 +222,7 @@ void __init meson_clk_register_clks(const struct clk_conf *clk_confs,
 							   clk_base);
 			break;
 		case CLK_CPU:
-			clk = meson_clk_register_cpu(clk_conf, clk_base,
+			clk = meson_clk_register_cpu(np, clk_conf, clk_base,
 						     &clk_lock);
 			break;
 		case CLK_PLL:

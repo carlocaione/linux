@@ -37,9 +37,14 @@
 #include <linux/slab.h>
 #include <linux/clk.h>
 #include <linux/clk-provider.h>
+#include <linux/reset.h>
+#include <linux/reset-controller.h>
 
 #define MESON_CPU_CLK_CNTL1		0x00
 #define MESON_CPU_CLK_CNTL		0x40
+#define MESON_CPU_CLK_CNTL_CPU		0x19c
+
+#define MESON_MAX_CPU_RST		4
 
 #define MESON_CPU_CLK_MUX1		BIT(7)
 #define MESON_CPU_CLK_MUX2		BIT(0)
@@ -50,6 +55,11 @@
 #define MESON_SEL_SHIFT			2
 
 #include "clkc.h"
+
+struct meson_reset_cpu {
+	void __iomem			*reset_base;
+	struct reset_controller_dev	rcdev;
+};
 
 struct meson_clk_cpu {
 	struct notifier_block		clk_nb;
@@ -182,13 +192,50 @@ static const struct clk_ops meson_clk_cpu_ops = {
 	.set_rate	= meson_clk_cpu_set_rate,
 };
 
-struct clk *meson_clk_register_cpu(const struct clk_conf *clk_conf,
+static int meson_reset_cpu_assert(struct reset_controller_dev *rcdev,
+				  unsigned long id)
+{
+	u32 reg;
+	struct meson_reset_cpu *reset_cpu = container_of(rcdev,
+							 struct meson_reset_cpu,
+							 rcdev);
+
+	reg = readl(reset_cpu->reset_base);
+	reg |= BIT(id + 24);
+	writel(reg, reset_cpu->reset_base);
+
+	return 0;
+}
+
+static int meson_reset_cpu_deassert(struct reset_controller_dev *rcdev,
+				    unsigned long id)
+{
+	u32 reg;
+	struct meson_reset_cpu *reset_cpu = container_of(rcdev,
+							 struct meson_reset_cpu,
+							 rcdev);
+
+	reg = readl(reset_cpu->reset_base);
+	reg &= ~BIT(id + 24);
+	writel(reg, reset_cpu->reset_base);
+
+	return 0;
+}
+
+static struct reset_control_ops meson_cpu_reset_ops = {
+	.assert		= meson_reset_cpu_assert,
+	.deassert	= meson_reset_cpu_deassert,
+};
+
+struct clk *meson_clk_register_cpu(struct device_node *np,
+				   const struct clk_conf *clk_conf,
 				   void __iomem *reg_base,
 				   spinlock_t *lock)
 {
 	struct clk *clk;
 	struct clk *pclk;
 	struct meson_clk_cpu *clk_cpu;
+	struct meson_reset_cpu *reset_cpu;
 	struct clk_init_data init;
 	int ret;
 
@@ -231,6 +278,17 @@ struct clk *meson_clk_register_cpu(const struct clk_conf *clk_conf,
 		goto unregister_clk_nb;
 	}
 
+	reset_cpu = kzalloc(sizeof(*reset_cpu), GFP_KERNEL);
+	if (!reset_cpu)
+		goto out;
+
+	reset_cpu->reset_base = reg_base + MESON_CPU_CLK_CNTL_CPU;
+	reset_cpu->rcdev.nr_resets = MESON_MAX_CPU_RST;
+	reset_cpu->rcdev.ops = &meson_cpu_reset_ops;
+	reset_cpu->rcdev.of_node = np;
+	reset_controller_register(&reset_cpu->rcdev);
+
+out:
 	return clk;
 
 unregister_clk_nb:
