@@ -1,0 +1,16 @@
+Amlogic power-management-unit:
+-------------------------------
+
+The pmu is used to turn off and on different power domains of the SoCs
+This includes the power to the CPU cores.
+
+Required node properties:
+- compatible value : = "amlogic,meson8b-pmu";
+- reg : physical base address and the size of the registers window
+
+Example:
+
+	pmu@c81000e4 {
+		compatible = "amlogic,meson8b-pmu", "syscon";
+		reg = <0xc81000e0 0x18>;
+	};

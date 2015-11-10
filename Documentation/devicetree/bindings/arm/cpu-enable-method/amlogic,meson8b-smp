@@ -1,0 +1,53 @@
+=========================================================
+Secondary CPU enable-method "amlogic,meson8b-smp" binding
+=========================================================
+
+This document describes the "amlogic,meson8b-smp" method for enabling secondary
+CPUs. To apply to all CPUs, a single "amlogic,meson8b-smp" enable method should
+be defined in the "cpus" node.
+
+Enable method name:	"amlogic,meson8b-smp"
+Compatible machines:	"amlogic,meson8b"
+Compatible CPUs:	"arm,cortex-a5"
+Related properties:	(none)
+
+Example:
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		enable-method = "amlogic,meson8b-smp";
+
+		cpu@200 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a5";
+			next-level-cache = <&L2>;
+			reg = <0x200>;
+			resets = <&clkc RST_CORE0>;
+		};
+
+		cpu@201 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a5";
+			next-level-cache = <&L2>;
+			reg = <0x201>;
+			resets = <&clkc RST_CORE1>;
+		};
+
+		cpu@202 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a5";
+			next-level-cache = <&L2>;
+			reg = <0x202>;
+			resets = <&clkc RST_CORE2>;
+		};
+
+		cpu@203 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a5";
+			next-level-cache = <&L2>;
+			reg = <0x203>;
+			resets = <&clkc RST_CORE3>;
+		};
+	};
+
