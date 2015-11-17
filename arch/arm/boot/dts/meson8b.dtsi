@@ -51,9 +51,20 @@
 / {
 	interrupt-parent = <&gic>;
 
+	scu@c4300000 {
+		compatible = "arm,cortex-a5-scu";
+		reg = <0xc4300000 0x100>;
+	};
+
+	pmu@c81000e4 {
+		compatible = "amlogic,meson8b-pmu", "syscon";
+		reg = <0xc81000e0 0x18>;
+	};
+
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
+		enable-method = "amlogic,meson8b-smp";
 
 		cpu@200 {
 			device_type = "cpu";
@@ -85,6 +96,19 @@
 			next-level-cache = <&L2>;
 			reg = <0x203>;
 			resets = <&clkc RST_CORE3>;
+		};
+	};
+
+	sram: sram@d9000000 {
+		compatible = "mmio-sram";
+		reg = <0xd9000000 0x20000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0 0xd9000000 0x20000>;
+
+		smp-sram@1ff80 {
+			compatible = "amlogic,meson8b-smp-sram";
+			reg = <0x1ff80 0x8>;
 		};
 	};
 
