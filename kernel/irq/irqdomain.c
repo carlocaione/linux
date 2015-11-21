@@ -554,7 +554,7 @@ static int irq_domain_translate(struct irq_domain *d,
 	return 0;
 }
 
-static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
+void irq_of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
 				      struct irq_fwspec *fwspec)
 {
 	int i;
@@ -565,6 +565,7 @@ static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
 	for (i = 0; i < irq_data->args_count; i++)
 		fwspec->param[i] = irq_data->args[i];
 }
+EXPORT_SYMBOL_GPL(irq_of_phandle_args_to_fwspec);
 
 unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
 {
@@ -618,7 +619,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
 {
 	struct irq_fwspec fwspec;
 
-	of_phandle_args_to_fwspec(irq_data, &fwspec);
+	irq_of_phandle_args_to_fwspec(irq_data, &fwspec);
 	return irq_create_fwspec_mapping(&fwspec);
 }
 EXPORT_SYMBOL_GPL(irq_create_of_mapping);
