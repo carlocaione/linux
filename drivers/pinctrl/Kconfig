@@ -130,6 +130,7 @@ config PINCTRL_MESON
 	select GPIOLIB
 	select OF_GPIO
 	select REGMAP_MMIO
+	select IRQ_DOMAIN_HIERARCHY
 
 config PINCTRL_ROCKCHIP
 	bool

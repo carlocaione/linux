@@ -14,7 +14,12 @@
 #include <dt-bindings/gpio/meson8-gpio.h>
 #include "pinctrl-meson.h"
 
-#define AO_OFF	120
+#define EE_BASE		0
+#define EE_NPINS	120
+#define AO_BASE		120
+#define AO_NPINS	16
+
+#define AO_OFF		AO_BASE
 
 static const struct pinctrl_pin_desc meson8_pins[] = {
 	MESON_PIN(GPIOX_0, 0),
@@ -907,19 +912,19 @@ static struct meson_pmx_func meson8_functions[] = {
 };
 
 static struct meson_bank meson8_banks[] = {
-	/*   name    first             last                 pullen  pull    dir     out     in  */
-	BANK("X",    PIN(GPIOX_0, 0),  PIN(GPIOX_21, 0),    4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
-	BANK("Y",    PIN(GPIOY_0, 0),  PIN(GPIOY_16, 0),    3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
-	BANK("DV",   PIN(GPIODV_0, 0), PIN(GPIODV_29, 0),   0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
-	BANK("H",    PIN(GPIOH_0, 0),  PIN(GPIOH_9, 0),     1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
-	BANK("Z",    PIN(GPIOZ_0, 0),  PIN(GPIOZ_14, 0),    1,  0,  1,  0,  3, 17,  4, 17,  5, 17),
-	BANK("CARD", PIN(CARD_0, 0),   PIN(CARD_6, 0),      2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
-	BANK("BOOT", PIN(BOOT_0, 0),   PIN(BOOT_18, 0),     2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
+	/*   name    first             last                 pullen  pull    dir     out     in     irq */
+	BANK("X",    PIN(GPIOX_0, 0),  PIN(GPIOX_21, 0),    4,  0,  4,  0,  0,  0,  1,  0,  2,  0, 112),
+	BANK("Y",    PIN(GPIOY_0, 0),  PIN(GPIOY_16, 0),    3,  0,  3,  0,  3,  0,  4,  0,  5,  0,  95),
+	BANK("DV",   PIN(GPIODV_0, 0), PIN(GPIODV_29, 0),   0,  0,  0,  0,  7,  0,  8,  0,  9,  0,  65),
+	BANK("H",    PIN(GPIOH_0, 0),  PIN(GPIOH_9, 0),     1, 16,  1, 16,  9, 19, 10, 19, 11, 19,  29),
+	BANK("Z",    PIN(GPIOZ_0, 0),  PIN(GPIOZ_14, 0),    1,  0,  1,  0,  3, 17,  4, 17,  5, 17,  14),
+	BANK("CARD", PIN(CARD_0, 0),   PIN(CARD_6, 0),      2, 20,  2, 20,  0, 22,  1, 22,  2, 22,  58),
+	BANK("BOOT", PIN(BOOT_0, 0),   PIN(BOOT_18, 0),     2,  0,  2,  0,  9,  0, 10,  0, 11,  0,  39),
 };
 
 static struct meson_bank meson8_ao_banks[] = {
-	/*   name    first                  last                      pullen  pull    dir     out     in  */
-	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
+	/*   name    first                  last                      pullen  pull    dir     out     in     irq */
+	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0,  0),
 };
 
 static struct meson_domain_data meson8_domain_data[] = {
@@ -927,15 +932,15 @@ static struct meson_domain_data meson8_domain_data[] = {
 		.name		= "banks",
 		.banks		= meson8_banks,
 		.num_banks	= ARRAY_SIZE(meson8_banks),
-		.pin_base	= 0,
-		.num_pins	= 120,
+		.pin_base	= EE_BASE,
+		.num_pins	= EE_NPINS,
 	},
 	{
 		.name		= "ao-bank",
 		.banks		= meson8_ao_banks,
 		.num_banks	= ARRAY_SIZE(meson8_ao_banks),
-		.pin_base	= 120,
-		.num_pins	= 16,
+		.pin_base	= AO_BASE,
+		.num_pins	= AO_NPINS,
 	},
 };
 
@@ -948,4 +953,5 @@ struct meson_pinctrl_data meson8_pinctrl_data = {
 	.num_groups	= ARRAY_SIZE(meson8_groups),
 	.num_funcs	= ARRAY_SIZE(meson8_functions),
 	.num_domains	= ARRAY_SIZE(meson8_domain_data),
+	.last_pin	= EE_NPINS + AO_NPINS,
 };
