@@ -214,3 +214,10 @@ struct meson_pinctrl {
 
 extern struct meson_pinctrl_data meson8_pinctrl_data;
 extern struct meson_pinctrl_data meson8b_pinctrl_data;
+
+int meson_get_domain_and_bank(struct meson_pinctrl *pc, unsigned int pin,
+			      struct meson_domain **domain,
+			      struct meson_bank **bank);
+
+struct regmap *meson_map_resource(struct meson_pinctrl *pc,
+				  struct device_node *node, char *name);

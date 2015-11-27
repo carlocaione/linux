@@ -99,9 +99,9 @@ static int meson_get_bank(struct meson_domain *domain, unsigned int pin,
  *
  * Return:	0 on success, a negative value on error
  */
-static int meson_get_domain_and_bank(struct meson_pinctrl *pc, unsigned int pin,
-				     struct meson_domain **domain,
-				     struct meson_bank **bank)
+int meson_get_domain_and_bank(struct meson_pinctrl *pc, unsigned int pin,
+			      struct meson_domain **domain,
+			      struct meson_bank **bank)
 {
 	struct meson_domain *d;
 	int i;
@@ -618,8 +618,8 @@ static struct regmap_config meson_regmap_config = {
 	.reg_stride = 4,
 };
 
-static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
-					 struct device_node *node, char *name)
+struct regmap *meson_map_resource(struct meson_pinctrl *pc,
+				  struct device_node *node, char *name)
 {
 	struct resource res;
 	void __iomem *base;
