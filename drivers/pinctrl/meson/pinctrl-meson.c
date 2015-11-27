@@ -540,6 +540,30 @@ static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
 	return !!(val & BIT(bit));
 }
 
+static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+{
+	struct meson_domain *domain = to_meson_domain(chip);
+	struct meson_pinctrl *pc = domain->pinctrl;
+	struct meson_bank *bank;
+	struct irq_fwspec irq_data;
+	unsigned int hwirq, irq;
+
+	hwirq = domain->data->pin_base + offset;
+
+	if (meson_get_bank(domain, hwirq, &bank))
+		return -ENXIO;
+
+	irq_data.param_count = 2;
+	irq_data.param[0] = hwirq;
+
+	/* dummy. It will be changed later in meson_irq_set_type */
+	irq_data.param[1] = IRQ_TYPE_EDGE_RISING;
+
+	irq = irq_domain_alloc_irqs(pc->irq_domain, 1, NUMA_NO_NODE, &irq_data);
+
+	return irq ? irq : -ENXIO;
+}
+
 static const struct of_device_id meson_pinctrl_dt_match[] = {
 	{
 		.compatible = "amlogic,meson8-pinctrl",
@@ -569,6 +593,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
 		domain->chip.direction_output = meson_gpio_direction_output;
 		domain->chip.get = meson_gpio_get;
 		domain->chip.set = meson_gpio_set;
+		domain->chip.to_irq = meson_gpio_to_irq;
 		domain->chip.base = domain->data->pin_base;
 		domain->chip.ngpio = domain->data->num_pins;
 		domain->chip.can_sleep = false;
@@ -680,6 +705,7 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
 		}
 
 		domain->of_node = np;
+		domain->pinctrl = pc;
 
 		domain->reg_mux = meson_map_resource(pc, np, "mux");
 		if (IS_ERR(domain->reg_mux)) {
@@ -748,6 +774,10 @@ static int meson_pinctrl_probe(struct platform_device *pdev)
 		pinctrl_unregister(pc->pcdev);
 		return ret;
 	}
+
+	ret = meson_gpio_irq_init(pc);
+	if (ret)
+		dev_err(pc->dev, "can't setup gpio interrupts\n");
 
 	return 0;
 }
