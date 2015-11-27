@@ -16,6 +16,8 @@
 #include <linux/regmap.h>
 #include <linux/types.h>
 
+struct meson_pinctrl;
+
 /**
  * struct meson_pmx_group - a pinmux group
  *
@@ -111,6 +113,7 @@ struct meson_domain_data {
 	unsigned int num_banks;
 	unsigned int pin_base;
 	unsigned int num_pins;
+	struct meson_pinctrl *pinctrl;
 };
 
 /**
@@ -123,6 +126,7 @@ struct meson_domain_data {
  * @chip:	gpio chip associated with the domain
  * @data;	platform data for the domain
  * @node:	device tree node for the domain
+ * @pinctrl:	pinctrl struct associated with the domain
  *
  * A domain represents a set of banks controlled by the same set of
  * registers.
@@ -136,6 +140,7 @@ struct meson_domain {
 	struct gpio_chip chip;
 	struct meson_domain_data *data;
 	struct device_node *of_node;
+	struct meson_pinctrl *pinctrl;
 };
 
 struct meson_pinctrl_data {
@@ -156,6 +161,14 @@ struct meson_pinctrl {
 	struct pinctrl_desc desc;
 	struct meson_pinctrl_data *data;
 	struct meson_domain *domains;
+
+	struct irq_domain *irq_domain;
+	struct regmap *reg_irq;
+	spinlock_t lock;
+
+	int num_gic_irqs;
+	int *irq_map;
+	int *gic_irqs;
 };
 
 #define PIN(x, b)	(b + x)
@@ -221,3 +234,5 @@ int meson_get_domain_and_bank(struct meson_pinctrl *pc, unsigned int pin,
 
 struct regmap *meson_map_resource(struct meson_pinctrl *pc,
 				  struct device_node *node, char *name);
+
+int meson_gpio_irq_init(struct meson_pinctrl *pc);
