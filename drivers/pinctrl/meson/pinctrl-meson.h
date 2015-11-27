@@ -83,6 +83,7 @@ enum meson_reg_type {
  * @first:	first pin of the bank
  * @last:	last pin of the bank
  * @regs:	array of register descriptors
+ * @irq:	input mux location for IRQs
  *
  * A bank represents a set of pins controlled by a contiguous set of
  * bits in the domain registers. The structure specifies which bits in
@@ -94,6 +95,7 @@ struct meson_bank {
 	unsigned int first;
 	unsigned int last;
 	struct meson_reg_desc regs[NUM_REG];
+	unsigned int irq;
 };
 
 /**
@@ -145,6 +147,7 @@ struct meson_pinctrl_data {
 	unsigned int num_groups;
 	unsigned int num_funcs;
 	unsigned int num_domains;
+	unsigned int last_pin;
 };
 
 struct meson_pinctrl {
@@ -192,11 +195,12 @@ struct meson_pinctrl {
 		.num_groups = ARRAY_SIZE(fn ## _groups),		\
 	}
 
-#define BANK(n, f, l, per, peb, pr, pb, dr, db, or, ob, ir, ib)		\
+#define BANK(n, f, l, per, peb, pr, pb, dr, db, or, ob, ir, ib, i)	\
 	{								\
 		.name	= n,						\
 		.first	= f,						\
 		.last	= l,						\
+		.irq	= i,						\
 		.regs	= {						\
 			[REG_PULLEN]	= { per, peb },			\
 			[REG_PULL]	= { pr, pb },			\
