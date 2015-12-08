@@ -51,6 +51,18 @@
 / {
 	interrupt-parent = <&gic>;
 
+	timer@c4300600 {
+		compatible = "arm,cortex-a5-twd-timer";
+		reg = <0xc4300600 0x20>;
+		interrupts = <1 13 0xf08>;
+	};
+
+	watchdog@c4300620 {
+		compatible = "arm,cortex-a5-twd-wdt";
+		reg = <0xc4300620 0x20>;
+		interrupts = <1 14 0xf08>;
+	};
+
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
