@@ -60,6 +60,14 @@
 	};
 };
 
+&mmc0 {
+	status = "okay";
+	pinctrl-names = "sdio_b";
+	pinctrl-0 = <&mmc0_sd_b_pins>;
+	meson,sd-port = <1>;
+	broken-cd;
+};
+
 &uart_AO {
 	status = "okay";
 	pinctrl-0 = <&uart_ao_a_pins>;
