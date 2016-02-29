@@ -135,6 +135,20 @@ struct meson_domain {
 	struct device_node *of_node;
 };
 
+
+enum {
+	MESON_PINCTRL_REG_MUX,
+	MESON_PINCTRL_REG_PULL,
+	MESON_PINCTRL_REG_PULL_EN,
+	MESON_PINCTRL_REG_GPIO,
+	MESON_PINCTRL_REG_NUM,
+};
+
+struct meson_reg {
+	unsigned int off;
+	unsigned int size;
+};
+
 struct meson_pinctrl_data {
 	const struct pinctrl_pin_desc *pins;
 	struct meson_pmx_group *groups;
@@ -143,6 +157,7 @@ struct meson_pinctrl_data {
 	unsigned int num_pins;
 	unsigned int num_groups;
 	unsigned int num_funcs;
+	struct meson_reg regs[MESON_PINCTRL_REG_NUM];
 };
 
 struct meson_pinctrl {
