@@ -151,7 +151,4 @@
 #define	GPIOCLK_3	118
 #define	GPIO_TEST_N	119
 
-#define AO		0x10
-#define AO2		0x11
-
 #endif

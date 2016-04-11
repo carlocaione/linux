@@ -201,7 +201,6 @@
 
 			pinctrl_periphs: pinctrl@c1109880 {
 				compatible = "amlogic,meson-gxbb-periphs-pinctrl";
-				reg = <0x0 0xc1109880 0x0 0x10>;
 				#address-cells = <2>;
 				#size-cells = <2>;
 				ranges;
@@ -209,7 +208,7 @@
 				gpio: bank@c11080b0 {
 					reg = <0x0 0x004b0 0x0 0x28>,
 					      <0x0 0x004e8 0x0 0x14>,
-					      <0x0 0x00520 0x0 0x14>,
+					      <0x0 0x00120 0x0 0x14>,
 					      <0x0 0x00430 0x0 0x40>;
 					reg-names = "mux", "pull", "pull-enable", "gpio";
 					gpio-controller;

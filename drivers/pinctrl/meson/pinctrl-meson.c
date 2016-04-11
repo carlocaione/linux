@@ -482,6 +482,8 @@ static int meson_gpio_direction_output(struct gpio_chip *chip, unsigned gpio,
 	struct meson_bank *bank;
 	int ret;
 
+	printk(KERN_EMERG "==> %s, gpio:%d, value:%d\n", __func__, gpio, value);
+
 	pin = domain->data->pin_base + gpio;
 	ret = meson_get_bank(domain, pin, &bank);
 	if (ret)
@@ -493,6 +495,7 @@ static int meson_gpio_direction_output(struct gpio_chip *chip, unsigned gpio,
 		return ret;
 
 	meson_calc_reg_and_bit(bank, pin, REG_OUT, &reg, &bit);
+	printk(KERN_EMERG "==> pin:%d, reg:%d, bit:%d\n", pin, reg, bit);
 	return regmap_update_bits(domain->reg_gpio, reg, BIT(bit),
 				  value ? BIT(bit) : 0);
 }
