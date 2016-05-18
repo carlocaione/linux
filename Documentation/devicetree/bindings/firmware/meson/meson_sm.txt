@@ -1,0 +1,49 @@
+* Amlogic Secure Monitor
+
+In the Amlogic SoCs the Secure Monitor code is used to provide access to the
+NVMEM, enable JTAG, set USB boot, etc...
+
+Required properties for the secure monitor node:
+- compatible: Should be "amlogic,meson-sm"
+- amlogic,sm-cmd-input-base: SMC32 function identifier to read the physical
+                             address of the input buffer
+- amlogic,sm-cmd-output-base: SMC32 function identifier to read the physical
+                              address of the output buffer
+
+Example:
+
+	#include <dt-bindings/firmware/meson-gxbb-sm.h>
+
+	...
+
+	firmware {
+		compatible = "simple-bus";
+
+		secure-monitor {
+			compatible = "amlogic,meson-sm";
+			amlogic,sm-cmd-input-base = <SM_GET_SHARE_MEM_INPUT_BASE>;
+			amlogic,sm-cmd-output-base = <SM_GET_SHARE_MEM_OUTPUT_BASE>;
+		};
+	};
+
+Node of a device using the secure monitor must have a custom property to
+specify the SMC32 function the driver is going to use. The values of all the
+SMC function identifiers are listed in a SoC-specific header file:
+
+"include/dt-bindings/firmware/meson-gxbb-sm.h" - for the Meson GXBB secure monitor.
+
+Example of the node using the secure monitor:
+
+	#include <dt-bindings/firmware/meson-gxbb-sm.h>
+
+	...
+
+	efuse: efuse {
+		compatible = "amlogic,meson-gxbb-efuse";
+		amlogic,sm-cmd-read-efuse = <SM_EFUSE_READ>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		...
+	};
+
