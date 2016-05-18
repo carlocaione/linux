@@ -44,6 +44,7 @@
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/gpio/meson-gxbb-gpio.h>
+#include <dt-bindings/firmware/meson-gxbb-sm.h>
 
 / {
 	compatible = "amlogic,meson-gxbb";
@@ -96,6 +97,16 @@
 	psci {
 		compatible = "arm,psci-0.2";
 		method = "smc";
+	};
+
+	firmware {
+		compatible = "simple-bus";
+
+		secure-monitor {
+			compatible = "amlogic,meson-sm";
+			amlogic,sm-cmd-input-base = <SM_GET_SHARE_MEM_INPUT_BASE>;
+			amlogic,sm-cmd-output-base = <SM_GET_SHARE_MEM_OUTPUT_BASE>;
+		};
 	};
 
 	timer {
