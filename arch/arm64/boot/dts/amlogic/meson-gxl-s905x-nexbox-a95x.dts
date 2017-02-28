@@ -147,27 +147,6 @@
 	pinctrl-names = "default";
 };
 
-/* Wireless SDIO Module */
-&sd_emmc_a {
-	status = "okay";
-	pinctrl-0 = <&sdio_pins>;
-	pinctrl-names = "default";
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	bus-width = <4>;
-	cap-sd-highspeed;
-	max-frequency = <100000000>;
-
-	non-removable;
-	disable-wp;
-
-	mmc-pwrseq = <&sdio_pwrseq>;
-
-	vmmc-supply = <&vddao_3v3>;
-	vqmmc-supply = <&vddio_boot>;
-};
-
 /* SD card */
 &sd_emmc_b {
 	status = "okay";
@@ -195,7 +174,7 @@
 	bus-width = <8>;
 	cap-sd-highspeed;
 	cap-mmc-highspeed;
-	max-frequency = <200000000>;
+	max-frequency = <100000000>;
 	non-removable;
 	disable-wp;
 	mmc-ddr-1_8v;

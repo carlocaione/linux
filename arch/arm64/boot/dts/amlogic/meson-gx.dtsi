@@ -49,6 +49,7 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/thermal/thermal.h>
 
 / {
 	interrupt-parent = <&gic>;
@@ -73,9 +74,10 @@
 		};
 	};
 
-	cpus {
+	cpus: cpus {
 		#address-cells = <0x2>;
 		#size-cells = <0x0>;
+		#cooling-cells = <2>; /* min followed by max */
 
 		cpu0: cpu@0 {
 			device_type = "cpu";
@@ -456,6 +458,43 @@
 			/* CVBS VDAC output port */
 			cvbs_vdac_port: port@0 {
 				reg = <0>;
+			};
+		};
+	};
+
+	thermal-zones {
+		soc_thermal {
+			polling-delay = <1000>;
+			polling-delay-passive = <100>;
+			sustainable-power = <2150>;
+
+			thermal-sensors = <&scpi_sensors 0>;
+			coefficients = <1000 0>;
+
+			trips {
+				control: trip-point@1 {
+					temperature = <80000>;
+					hysteresis = <1000>;
+					type = "passive";
+				};
+				hot: trip-point@2 {
+					temperature = <85000>;
+					hysteresis = <1000>;
+					type = "hot";
+				};
+				critical: trip-point@3 {
+					temperature = <125000>;
+					hysteresis = <1000>;
+					type = "critical";
+				};
+
+			};
+
+			cooling-maps {
+				cpufreq_cooling_map {
+					trip = <&control>;
+					cooling-device = <&cpus THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+				};
 			};
 		};
 	};
