@@ -84,6 +84,24 @@ Required properties:
 			 as used by the firmware. Refer to  platform details
 			 for your implementation for the IDs to use.
 
+Optional properties:
+- scpi,sensors-scale: array of 5 elements defining the unit scale used by the
+                      SCP for the 5 different sensor classes (temperature,
+                      voltage, current, power, energy) such that 1 == unit,
+                      1000 == milli, 1000000 == micro, ...
+
+                      Example:
+                         scpi,sensors-scale = <1 1000 1000 1000000 1000000>
+                      In this case the values reported by SCP are:
+                      -> temperature in degree Celsius
+                      -> voltage in millivolts
+                      -> current in milliamperes
+                      -> power in microwatts
+                      -> energy in microjoules
+
+                      The default value is:
+                         scpi,sensors-scale = <1000 1000 1000 1000000 1000000>
+
 Power domain bindings for the power domains based on SCPI Message Protocol
 ------------------------------------------------------------
 
